@@ -38,6 +38,7 @@ module Chartkick
       options = chartkick_deep_merge(Chartkick.options, options)
       element_id = options.delete(:id) || "chart-#{@chartkick_chart_id += 1}"
       height = options.delete(:height) || "300px"
+      prefix = options.key?(:var_name) ? "var " + options.delete(:var_name) + " = " : ""
       # content_for: nil must override default
       content_for = options.key?(:content_for) ? options.delete(:content_for) : Chartkick.content_for
 
@@ -45,7 +46,7 @@ module Chartkick
 
       js = <<JS
 <script type="text/javascript">
-  new Chartkick.#{klass}(#{element_id.to_json}, #{data_source.respond_to?(:chart_json) ? data_source.chart_json : data_source.to_json}, #{options.to_json});
+  #{prefix}new Chartkick.#{klass}(#{element_id.to_json}, #{data_source.respond_to?(:chart_json) ? data_source.chart_json : data_source.to_json}, #{options.to_json});
 </script>
 JS
       if content_for
